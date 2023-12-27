@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging App</title>
+</head>
+<body>
+    <h1>My messaging app</h1>
+    {% block content %}
+        <label for="chat-room-input">Chat room name: </label>
+        <input id="chat-room-input" type="text" placeholder="Enter chat room name..." required/>
+        <button id="chat-room-join">Join chat</button>
+    {% endblock %}
+
+    {% block script %}
+        <script>
+            document.querySelector("#chat-room-input").focus();
+            document.querySelector("#chat-room-input").onkeyup = function(e) {
+                console.log(e.key);
+                if (e.key === "Enter") {  // enter, return
+                    document.querySelector("#chat-room-join").click();
+                }
+            };
+
+            document.querySelector("#chat-room-join").onclick = function(e) {
+                var roomName = document.querySelector("#chat-room-input").value;
+                window.location.pathname = `room/${roomName}/`;
+            };
+        </script>
+    {% endblock %}
+</body>
+</html>

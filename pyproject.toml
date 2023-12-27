@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "django-strawberry-subscription-example"
+version = "0.1.0"
+description = ""
+authors = ["Roel Delos Reyes <badcoder28@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^4.2.7"
+broadcaster = "^0.2.0"
+strawberry-graphql-django = "^0.26.0"
+daphne = "^4.0.0"
+strawberry-graphql = {extras = ["channels"], version = "^0.217.0"}
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.12.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

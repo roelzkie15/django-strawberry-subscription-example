@@ -1,0 +1,72 @@
+{% extends "index.html" %}
+
+{% block content %}
+<textarea id="message-log" cols="100" rows="20" readonly></textarea><br>
+<input id="message-input" type="text" placeholder="Enter message...">
+<input id="message-send" type="button" value="Send">
+{% endblock %}
+
+{% block script %}
+<script src="https://unpkg.com/graphql-ws@5.14.2/umd/graphql-ws.min.js"></script>
+<script>
+    const graphql = window.graphqlWs;
+    const client = graphql.createClient({
+        url: 'ws://localhost:8000/graphql',
+    });
+
+    const roomName = "{{ room_name }}";
+    const messageLog = document.getElementById("message-log");
+
+    // subscription
+    (async () => {
+        const subscription = client.iterate({
+            query: `
+                subscription {
+                    onRoomMessageUpdate(room: "${roomName}") {
+                        content
+                    }
+                }
+            `,
+        });
+
+        for await (const event of subscription) {
+            if (event.data.onRoomMessageUpdate) {
+                messageLog.value += event.data.onRoomMessageUpdate?.content + "\n";
+            }
+        }
+    })();
+
+    const messageInput = document.getElementById("message-input");
+    messageInput.focus();
+    messageInput.onkeyup = (e) => {
+        if (e.key === "Enter") {
+            messageSend.click();
+        }
+    };
+
+    const messageSend = document.getElementById("message-send");
+    messageSend.onclick = async (e) => {
+        await fetch('http://localhost:8000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: `
+                    mutation sendMessage($room: String!, $message: String!) {
+                        sendMessage(room: $room, message: $message) {
+                            content
+                        }
+                    }
+                `,
+                variables: {
+                    room: roomName,
+                    message: messageInput.value
+                },
+            }),
+        });
+        messageInput.value = '';
+    };
+
+</script>
+{% endblock %}

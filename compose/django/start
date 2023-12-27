@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -o errexit
+
+APP_SERVER_PORT=${APP_SERVER_PORT:-8000}
+
+python manage.py migrate
+
+echo "Creating Django super user $DJANGO_SUPERUSER_USERNAME ..."
+python manage.py createsuperuser --noinput || true
+
+echo "Running server plus in local env ..."
+python manage.py runserver "0.0.0.0:$APP_SERVER_PORT"

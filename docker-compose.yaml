@@ -1,0 +1,29 @@
+version: '3'
+
+networks:
+  development:
+    external: true
+
+services:
+  messagingapp: &messagingapp
+    build:
+      context: .
+      args:
+        POETRY_INSTALL_OPTS: '--no-root'
+        POETRY_VERSION: '1.6.1'
+      target: development
+      dockerfile: Dockerfile
+    image: messagingapp
+    container_name: messagingapp
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./envs/local/.django.env
+    volumes:
+      - .:/app:z
+    ports:
+      - "8000:8000"
+    networks:
+      - development
+    command: /start
