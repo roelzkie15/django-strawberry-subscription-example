@@ -92,13 +92,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && rm -rf /var/lib/apt/lists/*
 
 # # Copy django server script.
-COPY ./compose/django/* /
+COPY ./start /start
 RUN chmod +x /start
 
-# RUN chmod +x /entrypoint
-# # Copy celery server script.
-# COPY ./compose/celery/* /start-celeryworker
-# RUN chmod +x /start-celeryworker
 
 # Copy built-in venv.
 COPY --from=builder-base $VIRTUAL_ENV $VIRTUAL_ENV

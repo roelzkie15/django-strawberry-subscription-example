@@ -19,7 +19,7 @@ services:
     stdin_open: true
     tty: true
     env_file:
-      - ./envs/local/.django.env
+      - ./.django.env
     volumes:
       - .:/app:z
     ports:
